@@ -58,17 +58,17 @@ Si `pyodbc` falla al instalarse, instala primero el driver ODBC de SQL Server en
 Crea un archivo `.env` en la raíz del proyecto con este contenido (ajusta los valores reales de tu entorno):
 
 ```env
-SERVIDOR_SQL=10.224.217.140
+SERVIDOR_SQL=tu_servidor
 USUARIO_SQL=usretl
-BASE_DE_DATOS=Conexion
-BD_DATASTEWARD=DATASTEWARD
+BASE_DE_DATOS= tu_bd
+BD_DATASTEWARD =bd_datasteward
 CONTRASENA_SQL=tu_password
 
-SERVIDOR_SMTP=100.89.32.76
+SERVIDOR_SMTP= tu_smtp
 PUERTO_SERVIDOR_SMTP=25
-CORREO_REMITENTE=infoExtranet@renault.com
+CORREO_REMITENTE=tucorreo@gmail.com
 EMAIL_DESTINATARIOS=correo1@ejemplo.com;correo2@ejemplo.com
-EMAIL_BODY="Este correo se envía automáticamente desde el sistema Extranet.\n\nPor favor, no responda a este correo."
+EMAIL_BODY="Lo que ve en el cuerpo del correo"
 ```
 
 Importante:
@@ -102,7 +102,76 @@ Si `python -m venv` no crea `pip`, puedes ejecutar:
 ```bash
 python -m ensurepip --default-pip
 ```
+# Diagrama General
 
+```text
+┌──────────────────────────────────┐
+│             main.py              │
+└────────────────┬─────────────────┘
+                 │
+                 ▼
+┌──────────────────────────────────┐
+│         ReportUseCase            │
+└────────────┬─────────────┬────────┘
+             │             │
+             ▼             ▼
+┌────────────────┐  ┌──────────────┐
+│ DateService    │  │ LoggerService│
+└────────────────┘  └──────────────┘
+             │
+             ▼
+┌──────────────────────────────────┐
+│      SqlServerService            │
+└──────────────────────────────────┘
+
+            ▲
+            │
+┌──────────────────────────────────┐
+│ PathResolver / Settings          │
+└──────────────────────────────────┘
+```
+
+# Estructura del Proyecto
+
+```text
+proyecto/
+
+│
+├── src/
+│   │
+│   ├── application/
+│   │   └── report_use_case.py
+│   │
+│   ├── config/
+│   │   ├── settings.py
+│   │   └── path_resolver.py
+│   │
+│   ├── infrastructure/
+│   │   │
+│   │   ├── database/
+│   │   │   └── sql_server_service.py
+│   │   │
+│   │   └── logging/
+│   │       └── logger_service.py
+│   │
+│   ├── services/
+│   │   └── date_service.py
+│   │
+│   └── main.py
+│
+├── logs/
+│   └── log.txt
+│
+├── tests/
+│
+├── .env
+│
+├── requirements.txt
+│
+└── README.md
+```
+
+---
 ## 8) Troubleshooting
 
 - Error de `pyodbc`: revisar que el controlador ODBC de SQL Server esté instalado.
@@ -117,4 +186,3 @@ python -m ensurepip --default-pip
 - `python-dotenv`
 - `openpyxl`
 
-Si quieres, puedo dejarte también un archivo `requirements.txt` para instalar todo con un solo comando.
